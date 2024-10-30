@@ -1,6 +1,7 @@
 ---
 title: "Benefit Transfer"
 author: "Natalie Smith"
+date: "October 29, 2024"
 format: 
   html:
     code-fold: true
@@ -17,26 +18,15 @@ execute:
 
 # Introduction
 
-Coastal wetlands provide a natural defense against storm surges and the effects of sea-level rise. They act like a sponge that dissipates wave impacts and reduces flood risk. In this homework, you will help derive the value of wetlands for a study in Huntington Beach, California. Valuing wetland restoration You will contribute to a study on wetlands restoration in Huntington Beach, California, which has an area of 60 hectares of salt marsh to restore. You will conduct a benefits transfer analysis, drawing on several other studies.
+Coastal wetlands are essential in providing protection against storm surges and mitigating the effects of sea-level rise. These ecosystems function as natural sponges, absorbing wave energy and significantly reducing flood risk. This study will evaluate the economic value of restoring 60 hectares of salt marsh in Huntington Beach, California, employing a benefits transfer analysis.
 
-After some work, you identified the following: ● Bayraktov et al. (2015): a meta-analysis of coastal wetland restoration costs. Specifically, you have access to the mangrove and salt marsh databases. ● Costanza et al. (2021): estimate the storm protection benefits (avoided damage).
+Data from Bayraktov et al. (2015) will be incorporated, which includes a meta-analysis of the restoration costs associated with coastal wetlands. Furthermore, insights from Costanza et al. (2021) will be utilized, as this research estimates the storm protection benefits of wetlands through calculations of avoided damages.
 
-Data You have part of the dataset of Bayraktov et al. (2015). We called this database cost_df, and it has the following information:
+![Coastal wetlands reduce damaging effects on coastal communities, Costanza et al. (2021)](wetlands.png)
 
--   study_cluster: research belonging to a specific year
--   wetland_type: mangrove or saltmarsh
--   observation: research ID
--   reference: authors
--   ref_year: publication year
--   country: country where the restoration project took place
--   area_ha: restoration area
--   total_cost_2010: total restoration cost in USD2010
+# Part 1: Restoration Costs
 
-# Part 1:
-
-Restoration costs
-
-You will employ a benefit transfer to find the costs of restoring 60 hectares of wetland.
+*Employ a benefit transfer to find the costs of restoring 60 hectares of wetland.*
 
 ```{r}
 #load libraries
@@ -49,13 +39,13 @@ library(kableExtra)
 cost_df <- read.csv(here("data", "cost_df.csv"))
 ```
 
-## 1)
+## 
 
-Inspect the dataset. What wetland type is most appropriate for your analysis? Filter the dataset for that wetland type.
+*Inspect the dataset. What wetland type is most appropriate for your analysis? Filter the dataset for that wetland type.*
 
 ```{r}
 #inspect the dataset
-unique(cost_df$wetland_type)
+# unique(cost_df$wetland_type)
 
 #filter dataset for wetlands type
 wetland_df <- cost_df %>% 
@@ -65,9 +55,9 @@ wetland_df <- cost_df %>%
 
 Saltmarsh is the most appropriate for our analysis.
 
-## 2)
+## 
 
-Create a new variable with the restoration costs per hectare. Then, choose one of the research studies and estimate the total costs of restoring 60 hectares in Huntington Beach. Explain your choice.
+*Create a new variable with the restoration costs per hectare. Then, choose one of the research studies and estimate the total costs of restoring 60 hectares in Huntington Beach. Explain your choice.*
 
 ```{r}
 #create a new variable with restoration costs per hectare
@@ -86,13 +76,13 @@ wetland_df <- wetland_df %>%
 
 ```
 
-Given that the salt marsh I aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of $213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately $12,821,394.
+Given that the salt marsh we aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of \$213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately \$12,821,394.
 
-## 3)
+## 
 
-We are interested in the marginal cost of each additional hectare restored. Make a scatter plot of hectares on the y-axis and total restoration costs on the x-axis. Describe the relationship between total costs and wetland area restored.
+*We are interested in the marginal cost of each additional hectare restored. Make a scatter plot of hectares on the y-axis and total restoration costs on the x-axis. Describe the relationship between total costs and wetland area restored.*
 
-```{r, fig.cap="Figure 1: Update caption"}
+```{r, fig.cap="Figure 1: Scatterplot illustrating the relationship between total restoration costs and salt marsh area restored, using log-transformed variables. A slight positive trend is observed, with fluctuating costs indicating variable marginal costs per hectare."}
 # #scatter plot
 # ggplot(wetland_df, aes(x = area_ha, y = total_cost_2010)) +
 #   geom_point() +
@@ -101,11 +91,12 @@ We are interested in the marginal cost of each additional hectare restored. Make
 #        y = "Total restoration costs (USD2010)") +
 #   theme_bw()
 
-# The above scatteplot shows all the points very close to each other, making it difficult to see the relationship between area and costs.To better visualize, I will log-transform the axes.
+# The above scatterplot shows all the points very close to each other, making it difficult to see the relationship between area and costs.To better visualize, log-transform the axes.
 
 # Scatter plot with log-transformed axes
 ggplot(wetland_df, aes(x = area_ha, y = total_cost_2010)) +
   geom_point() +
+  geom_smooth(se = FALSE) +
   scale_x_log10() +  # Log transform x-axis
   scale_y_log10() +  # Log transform y-axis
   labs(title = "Total Restoration Costs by Saltmarsh Area",
@@ -114,47 +105,94 @@ ggplot(wetland_df, aes(x = area_ha, y = total_cost_2010)) +
   theme_bw()
 ```
 
-## 4)
+Based on the scatterplot, which features log-transformed variables to better visualize the trends, there appears to be a slight positive trend between total restoration costs and the area of saltmarsh restored, though the relationship isn’t strictly linear. The costs fluctuate—first increasing, then decreasing, then increasing again—which suggests that the marginal cost per additional hectare isn't constant.
 
-Run the following regression: total_cost_2010 = a + b\*area_ha + error. Using the outcome of this regression, recalculate the total cost of restoring 60 hectares of wetland.
+## 
+
+*Run the following regression: total_cost_2010 = a + b\*area_ha + error. Using the outcome of this regression, recalculate the total cost of restoring 60 hectares of wetland.*
 
 ```{r}
-#run regression
+# run regression
 lm_cost <- lm(total_cost_2010 ~ area_ha, data = wetland_df)
 
-summary(lm_cost)
+# display results
+# summary(lm_cost)
 ```
 
 ```{r}
-#recalculate total cost with 60 ha of wetland
+# recalculate total cost with 60 ha of wetland
 hb_cost <- predict(lm_cost, data.frame(area_ha = 60))
+# hb_cost
 ```
 
+Based on the regression analysis, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately \$5,898,180.
 
-## 5)
+## 
 
-Describe one way you could improve your cost analysis and valuation.
+*Describe one way you could improve your cost analysis and valuation.*
 
-# Part 2:
+The cost analysis could be improved by incorporating additional variables that could affect restoration costs per hectare such as project size, sector, site-specific conditions, ecological complexity, and project duration. Incorporating these factors into the regression model would allow for a more accurate estimate of the total cost of restoring 60 hectares of wetland.
 
-Storm protection benefits
+# Part 2: Storm Protection Benefits
 
-Costanza et al. (2021) analyzed 1288 coastal storms globally to calculate the storm protection benefits from wetlands. The authors obtained the following regression estimates: $$
+Costanza et al. (2021) analyzed 1288 coastal storms globally to calculate the storm protection benefits from wetlands. The authors obtained the following regression estimates:
+
+$$
 ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - 
 0.55ln(speed) + 0.137(volume) - 0.058(time)
 $$
 
-They have the following variables:
+Variables include:
 
 -   Damages/GDP wind speed of the storm (windspeed)
--   Forward speed of the storm (speed) wetland area in the swath of the storm (wetlands)
+-   Forward speed of the storm (speed)
+-   Wetland area in the swath of the storm (wetlands)
 -   Volume of water in the ocean proximal to the storm landfall (volume)
 -   Year of the storm minus 1900 (time) as a (non-transformed) linear variable.
 
-## 6)
+## 
 
-Interpret the coefficient on ln(wetlands). (Hint: notice that the dependent variable is also log-transformed)
+*Interpret the coefficient on ln(wetlands)*
 
-## 7)
+The coefficient for ln(wetlands) is -0.236, indicating that a 1% increase in wetland area is associated with a 0.236% decrease in damages relative to GDP. Because both the dependent variable (damages/GDP) and the wetland area are log-transformed, this coefficient captures the percentage change in damages/GDP resulting from a 1% change in wetland area. Essentially, larger wetland areas provide greater storm protection benefits, effectively mitigating the economic damages incurred during storms.
 
-Calculate the avoided damage of 60 additional hectares of wetlands in case of a storm like Hurricane Hilary. You have the following information: damages = \$18 million, and the available wetland area today is 72 hectares. Assume the GDP doesn't change (only damage moves), and all the remaining variables remain constant.
+## 
+
+*Calculate the avoided damage of 60 additional hectares of wetlands in case of a storm like Hurricane Hilary. You have the following information: damages = \$18 million, and the available wetland area today is 72 hectares. Assume the GDP doesn't change (only damage moves), and all the remaining variables remain constant.*
+
+```{r}
+
+#ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - 
+#0.55ln(speed) + 0.137(volume) - 0.058(time)
+
+#given data
+current_wetland_area <- 72
+additional_wetland_area <- 60
+total_wetland_area <- current_wetland_area + additional_wetland_area #132
+damages <- 18000000  
+
+#calculate ln(damages/GDP) for current and total wetland area
+ln_damage_current <- -7.992 - 0.236 * log(current_wetland_area)
+#-7.992 - 0.236 * log(72)[4.276] = -9.001293
+
+ln_damage_total <- -7.992 - 0.236 * log(total_wetland_area)
+#-7.992 - 0.236 * log(132)[4.882] = -9.144341
+
+#calculate damages/GDP ratios (we found the log and we need the actual results)
+damage_current <- exp(ln_damage_current)
+#exp(-9.001293) ≈ 0.0001232503
+
+damage_total <- exp(ln_damage_total)
+#exp(-9.144341) ≈ 0.0001068226
+
+#calculate avoided damage
+#subtract the new ratio from the old ratio and multiply by the total damages
+avoided_damage <- damages * (damage_current - damage_total)
+#0.0001232503 - 0.0001068226 = 0.0000164277 * 18000000 = 295.6986
+# avoided_damage
+
+
+
+```
+
+Restoring additional wetlands can effectively reduce economic storm damage by approximately \$295.70 in events similar to Hurricane Hilary.
