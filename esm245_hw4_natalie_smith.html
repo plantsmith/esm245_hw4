@@ -3320,7 +3320,7 @@ window.Quarto = {
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   filter(area_ha &gt; 40 &amp; area_ha &lt; 100) %&gt;% </span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   select(observation, area_ha, total_cost_2010, cost_per_ha)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Given that the salt marsh we aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of $213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately $12,821,394.</p>
+<p>Given that the salt marsh we aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size that is in the United States. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of $213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately $12,821,394.</p>
 </section>
 <section id="section-2" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="section-2"><span class="header-section-number">2.3</span> </h2>
@@ -3349,7 +3349,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Based on the scatterplot, which features log-transformed variables to better visualize the trends, there appears to be a positive trend between total restoration costs and the area of saltmarsh restored, though the relationship isn’t strictly linear. The costs fluctuate suggesting that the marginal cost per additional hectare isn’t constant.</p>
+<p>The scatterplot, which features log-transformed variables to better visualize the trends, illustrates a positive trend between total restoration costs and the area of saltmarsh restored, though the relationship isn’t strictly linear. The costs fluctuate suggesting that the marginal cost per additional hectare isn’t constant.</p>
 </section>
 <section id="section-3" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="section-3"><span class="header-section-number">2.4</span> </h2>
@@ -3418,69 +3418,34 @@ ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) -
 <h2 data-number="3.2" class="anchored" data-anchor-id="section-6"><span class="header-section-number">3.2</span> </h2>
 <p><em>Calculate the avoided damage of 60 additional hectares of wetlands in case of a storm like Hurricane Hilary. You have the following information: damages = $18 million, and the available wetland area today is 72 hectares. Assume the GDP doesn’t change (only damage moves), and all the remaining variables remain constant.</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - </span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># #0.55ln(speed) + 0.137(volume) - 0.058(time)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># #given data</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># current_wetland_area &lt;- 72</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># additional_wetland_area &lt;- 60</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># total_wetland_area &lt;- current_wetland_area + additional_wetland_area #132</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># damages &lt;- 18000000  </span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># #calculate ln(damages/GDP) for current and total wetland area</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_damage_current &lt;- -7.992 - 0.236 * log(current_wetland_area)</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># #-7.992 - 0.236 * log(72)[4.276] = -9.001293</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_damage_total &lt;- -7.992 - 0.236 * log(total_wetland_area)</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># #-7.992 - 0.236 * log(132)[4.882] = -9.144341</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># #calculate damages/GDP ratios (we found the log and we need the actual results)</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># damage_current &lt;- exp(ln_damage_current)</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># #exp(-9.001293) ≈ 0.0001232503</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co"># damage_total &lt;- exp(ln_damage_total)</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># #exp(-9.144341) ≈ 0.0001068226</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># #calculate avoided damage</span></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># #subtract the new ratio from the old ratio and multiply by the total damages</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co"># avoided_damage &lt;- damages * (damage_current - damage_total)</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co"># #0.0001232503 - 0.0001068226 = 0.0000164277 * 18000000 = 295.6986</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># avoided_damage</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Restoring additional wetlands can effectively reduce economic storm damage by approximately $295.70 in events similar to Hurricane Hilary.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#0.55ln(speed) + 0.137(volume) - 0.058(time)</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate change in wetland </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>current_wetland_area <span class="ot">&lt;-</span> <span class="dv">72</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>additional_wetland_area <span class="ot">&lt;-</span> <span class="dv">60</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>total_wetland_area <span class="ot">&lt;-</span> current_wetland_area <span class="sc">+</span> additional_wetland_area </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 72 + 60 = 132</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>ln_wetland <span class="ot">&lt;-</span> <span class="fu">log</span>(total_wetland_area<span class="sc">/</span>current_wetland_area)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_wetland</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#log(132/72) = 0.6061358034</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#reduction in damages</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>ln_damages <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.236</span> <span class="sc">*</span> ln_wetland</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co"># - 0.236 * 0.6061358034 = -0.1430480496</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_damages</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate damage</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>damages <span class="ot">&lt;-</span> <span class="dv">18000000</span>  </span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>damage_new <span class="ot">&lt;-</span> damages <span class="sc">*</span> <span class="fu">exp</span>(ln_damages)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#18,000,000 * exp(-0.1430480496)</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co"># damage_new</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>avoided_damage <span class="ot">=</span> damages <span class="sc">-</span> damage_new</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#18000000 - 15600824 = 2399176</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>avoided_damage <span class="co">#million</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#0.55ln(speed) + 0.137(volume) - 0.058(time)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate change in wetland </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>current_wetland_area <span class="ot">&lt;-</span> <span class="dv">72</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>additional_wetland_area <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>total_wetland_area <span class="ot">&lt;-</span> current_wetland_area <span class="sc">+</span> additional_wetland_area </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 72 + 60 = 132</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>ln_wetland <span class="ot">&lt;-</span> <span class="fu">log</span>(total_wetland_area<span class="sc">/</span>current_wetland_area)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_wetland</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#log(132/72) = 0.6061358034</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#reduction in damages</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>ln_damages <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">0.236</span> <span class="sc">*</span> ln_wetland</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co"># - 0.236 * 0.6061358034 = -0.1430480496</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># ln_damages</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate damage</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>damages <span class="ot">&lt;-</span> <span class="dv">18000000</span>  </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>damage_new <span class="ot">&lt;-</span> damages <span class="sc">*</span> <span class="fu">exp</span>(ln_damages)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#18,000,000 * exp(-0.1430480496)</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co"># damage_new</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>avoided_damage <span class="ot">=</span> damages <span class="sc">-</span> damage_new</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">#18000000 - 15600824 = 2399176</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>avoided_damage <span class="co">#million</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2399176</code></pre>
 </div>

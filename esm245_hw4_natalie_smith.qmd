@@ -23,6 +23,7 @@ Coastal wetlands are essential in providing protection against storm surges and 
 Data from Bayraktov et al. (2015) will be incorporated, which includes a meta-analysis of the restoration costs associated with coastal wetlands. Furthermore, insights from Costanza et al. (2021) will be utilized, as this research estimates the storm protection benefits of wetlands through calculations of avoided damages.
 
 # Part 1: Restoration Costs
+
 *Employ a benefit transfer to find the costs of restoring 60 hectares of wetland.*
 
 ```{r}
@@ -67,7 +68,7 @@ wetland_df <- wetland_df %>%
 #   select(observation, area_ha, total_cost_2010, cost_per_ha)
 ```
 
-Given that the salt marsh we aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of \$213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately \$12,821,394.
+Given that the salt marsh we aim to restore spans 60 hectares, I will select a study from the dataset with the area that most closely matching this size that is in the United States. The study with the closest match is the one with an observation ID of 126, which covers 44.5 hectares and has a cost of \$213,689.9 per hectare. Based on this rate, the estimated total cost to restore 60 hectares of salt marsh in Huntington Beach is approximately \$12,821,394.
 
 ## 
 
@@ -90,7 +91,8 @@ ggplot(wetland_usa, aes(x = total_cost_2010, y =area_ha)) +
        y = "Total Restoration Costs (USD2010, log scale)") +
   theme_bw()
 ```
-Based on the scatterplot, which features log-transformed variables to better visualize the trends, there appears to be a positive trend between total restoration costs and the area of saltmarsh restored, though the relationship isn’t strictly linear. The costs fluctuate suggesting that the marginal cost per additional hectare isn't constant.
+
+The scatterplot, which features log-transformed variables to better visualize the trends, illustrates a positive trend between total restoration costs and the area of saltmarsh restored, though the relationship isn’t strictly linear. The costs fluctuate suggesting that the marginal cost per additional hectare isn't constant.
 
 ## 
 
@@ -146,41 +148,6 @@ The coefficient for ln(wetlands) is -0.236, indicating that a 1% increase in wet
 *Calculate the avoided damage of 60 additional hectares of wetlands in case of a storm like Hurricane Hilary. You have the following information: damages = \$18 million, and the available wetland area today is 72 hectares. Assume the GDP doesn't change (only damage moves), and all the remaining variables remain constant.*
 
 ```{r}
-# 
-# #ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - 
-# #0.55ln(speed) + 0.137(volume) - 0.058(time)
-# 
-# #given data
-# current_wetland_area <- 72
-# additional_wetland_area <- 60
-# total_wetland_area <- current_wetland_area + additional_wetland_area #132
-# damages <- 18000000  
-# 
-# #calculate ln(damages/GDP) for current and total wetland area
-# ln_damage_current <- -7.992 - 0.236 * log(current_wetland_area)
-# #-7.992 - 0.236 * log(72)[4.276] = -9.001293
-# 
-# ln_damage_total <- -7.992 - 0.236 * log(total_wetland_area)
-# #-7.992 - 0.236 * log(132)[4.882] = -9.144341
-# 
-# #calculate damages/GDP ratios (we found the log and we need the actual results)
-# damage_current <- exp(ln_damage_current)
-# #exp(-9.001293) ≈ 0.0001232503
-# 
-# damage_total <- exp(ln_damage_total)
-# #exp(-9.144341) ≈ 0.0001068226
-# 
-# #calculate avoided damage
-# #subtract the new ratio from the old ratio and multiply by the total damages
-# avoided_damage <- damages * (damage_current - damage_total)
-# #0.0001232503 - 0.0001068226 = 0.0000164277 * 18000000 = 295.6986
-# avoided_damage
-
-
-# Restoring additional wetlands can effectively reduce economic storm damage by approximately $295.70 in events similar to Hurricane Hilary.
-```
-
-```{r}
 
 #ln(damages/GDP) = -7.992 - 0.236ln(wetlands) + 3.298ln(wind speed) - 
 #0.55ln(speed) + 0.137(volume) - 0.058(time)
@@ -207,10 +174,10 @@ damage_new <- damages * exp(ln_damages)
 #18,000,000 * exp(-0.1430480496)
 # damage_new
 
-
 avoided_damage = damages - damage_new
 #18000000 - 15600824 = 2399176
 avoided_damage #million
 
 ```
-Restoring additional wetlands can effectively reduce economic storm damage by approximately $2,399,176 in events similar to Hurricane Hilary.
+
+Restoring additional wetlands can effectively reduce economic storm damage by approximately \$2,399,176 in events similar to Hurricane Hilary.
